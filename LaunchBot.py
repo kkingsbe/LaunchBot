@@ -18,14 +18,14 @@ class RocketLaunch:
 class LaunchBot(discord.Client):
     msg_id = ""
 
-    def load_settings(self):
+    def load_settings(self): #Loads the settings from launchbotconfig.txt
         settings = open("launchbotconfig.txt", "r+").readlines()
         for setting in settings:
             if setting.startswith("msg_id"):
                 self.msg_id = setting.split(": ")[1]
                 print("Message ID: " + self.msg_id)
 
-    async def test(self):
+    async def test(self): #Test method (not used)
         channel = client.get_channel('577934410184130570')
         message = await client.get_message(channel, self.msg_id)
         await client.edit_message(message, "Test Edit")
@@ -46,13 +46,13 @@ class LaunchBot(discord.Client):
             missionname = launch.split(",")[9]
             launches.append(RocketLaunch(id, name, windowstart, windowend, net, status, infourl, agencyname, vehicle, missionname))
 
-    def savenewlaunches(self, newlaunches):
+    def savenewlaunches(self, newlaunches): #Saves launches to file
         f = open("launches.txt", "w+")
         for launch in newlaunches:
             f.write(str(launch.id) + "," + str(launch.name) + "," + str(launch.windowstart) + "," + str(launch.windowend) + "," + str(launch.net) + "," + str(launch.status) + "," + str(launch.infourl) + "," + str(launch.agencyname) + "," + str(launch.vehicle) + "," + str(launch.missionname) + "\n")
         f.close()
 
-    async def updatecomment(self,launches):
+    async def updatecomment(self,launches): #Updates the comment in the launch-manifest channel
         channel = client.get_channel('577934410184130570')
         message = await client.get_message(channel, self.msg_id)
 
@@ -63,7 +63,7 @@ class LaunchBot(discord.Client):
 
         await client.edit_message(message, content)
 
-    async def update_launches(self):
+    async def update_launches(self): #Checks if any new launches are listed, and if so, edits the comment to reflect the change
         oldlaunches = self.parselaunches("launches.txt")
         newlaunches = []
 
